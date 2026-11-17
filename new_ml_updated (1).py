@@ -59,15 +59,66 @@ from sklearn.svm import SVC
 # Level-2 Meta-Learner
 from xgboost import XGBClassifier
 
-def resolve_file(candidates):
-    for path in candidates:
+import urllib.request
+
+def resolve_file(candidates, github_urls=None, fallback_save_as=None):
+    # 1. Check direct paths (current dir, Dataset/, /content/) and script directory
+    search_paths = list(candidates)
+    if "__file__" in globals():
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        search_paths.extend([os.path.join(script_dir, p) for p in candidates])
+
+    for path in search_paths:
         if os.path.exists(path):
             return path
-    raise FileNotFoundError(f"Could not find any of: {candidates}. Please upload the CSV files.")
 
-TRAIN_PATH = resolve_file(["/content/train (1).csv", "train (1).csv", "/content/train.csv", "train.csv"])
-TEST_PATH  = resolve_file(["/content/test (1).csv", "test (1).csv", "/content/test.csv", "test.csv"])
-SUB_PATH   = resolve_file(["/content/gender_submission.csv", "gender_submission.csv"])
+    # 2. Auto-fetch from your public GitHub Dataset/ folder (for fresh Colab sessions)
+    if github_urls and fallback_save_as:
+        for url in github_urls:
+            try:
+                urllib.request.urlretrieve(url, fallback_save_as)
+                print(f"Downloaded '{fallback_save_as}' from GitHub repository.")
+                return fallback_save_as
+            except Exception:
+                continue
+
+    raise FileNotFoundError(
+        f"Could not find any of: {candidates}. "
+        "Please download the Titanic dataset from "
+        "https://www.kaggle.com/competitions/titanic/data and place the CSVs here."
+    )
+
+GITHUB_RAW_BASE = "https://raw.githubusercontent.com/meetjain104/ES678-titanic-stacked-ensemble/main/Dataset"
+
+TRAIN_PATH = resolve_file(
+    candidates=[
+        "Dataset/train (1).csv", "Dataset/train.csv",
+        "/content/train (1).csv", "/content/train.csv",
+        "train (1).csv", "train.csv"
+    ],
+    github_urls=[f"{GITHUB_RAW_BASE}/train%20(1).csv", f"{GITHUB_RAW_BASE}/train.csv"],
+    fallback_save_as="train.csv"
+)
+
+TEST_PATH = resolve_file(
+    candidates=[
+        "Dataset/test (1).csv", "Dataset/test.csv",
+        "/content/test (1).csv", "/content/test.csv",
+        "test (1).csv", "test.csv"
+    ],
+    github_urls=[f"{GITHUB_RAW_BASE}/test%20(1).csv", f"{GITHUB_RAW_BASE}/test.csv"],
+    fallback_save_as="test.csv"
+)
+
+SUB_PATH = resolve_file(
+    candidates=[
+        "Dataset/gender_submission.csv",
+        "/content/gender_submission.csv",
+        "gender_submission.csv"
+    ],
+    github_urls=[f"{GITHUB_RAW_BASE}/gender_submission.csv"],
+    fallback_save_as="gender_submission.csv"
+)
 
 train_df = pd.read_csv(TRAIN_PATH)
 test_df = pd.read_csv(TEST_PATH)
