@@ -1,6 +1,6 @@
 # Predictive Modeling via Stacked Ensemble Learning: A Two-Tiered Classification Approach
 
-**Course:** ES 678 — Machine Learning (Course Project)  
+**Course:** ES 678 Machine Learning (Course Project)  
 **Author:** Meet Rajendrakumar Jain (Roll No. 26210087)  
 **Institution:** Indian Institute of Technology Gandhinagar  
 
