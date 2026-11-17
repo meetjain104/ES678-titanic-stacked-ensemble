@@ -51,3 +51,7 @@ This repository contains the source code, LaTeX paper source, generated figures,
 ├── ML_project_2026.zip          # LaTeX source archive
 ├── requirements.txt             # Python dependencies
 └── README.md                    # Project overview, data access & reproducibility notes
+---
+## References & AI-Use Disclosure
+- ** Key Methods & Libraries ** : Built with scikit-learn, xgboost, shap, scipy, plotly, matplotlib, and seaborn. Core methodology follows Wolpert (1992) for stacked generalization, Chen & Guestrin (2016) for XGBoost, and Lundberg & Lee (2017) for SHAP.
+- **AI-Use Disclosure ** : Generative AI tools (Gemini / ChatGPT) were used to assist with Python diagnostic plotting code, README documentation, and LaTeX manuscript formatting. All code execution, numerical results, statistical interpretations, and course requirements were independently verified by the author.
